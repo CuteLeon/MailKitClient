@@ -96,6 +96,7 @@
             this.AttachmentButton.TabIndex = 10;
             this.AttachmentButton.Text = "附件";
             this.AttachmentButton.UseVisualStyleBackColor = true;
+            this.AttachmentButton.Click += new System.EventHandler(this.AttachmentButton_Click);
             // 
             // BodyTextBox
             // 
@@ -208,6 +209,7 @@
             this.SendButton.TabIndex = 9;
             this.SendButton.Text = "发送";
             this.SendButton.UseVisualStyleBackColor = true;
+            this.SendButton.Click += new System.EventHandler(this.SendButton_Click);
             // 
             // MailClientForm
             // 
@@ -218,6 +220,7 @@
             this.Name = "MailClientForm";
             this.Text = "MailClientForm";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Shown += new System.EventHandler(this.MailClientForm_Shown);
             this.MainTablePanel.ResumeLayout(false);
             this.MainTablePanel.PerformLayout();
             this.ResumeLayout(false);
