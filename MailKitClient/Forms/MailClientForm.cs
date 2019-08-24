@@ -15,13 +15,22 @@ namespace MailKitClient.Forms
         private const string UserAddress = "SystemRC@yeah.net";
         private const string Password = "SystemRC123";
 
-        MailKitSender mailKitSender = new MailKitSender();
+        MailKitSender mailKitSender;
 
         MailKitReceiver mailKitReceiver = new MailKitReceiver();
 
         public MailClientForm()
         {
             this.InitializeComponent();
+        }
+
+        private void MailClientForm_Shown(object sender, System.EventArgs e)
+        {
+            this.mailKitSender = new MailKitSender(
+                SmtpClientHost,
+                SmtpClientPort,
+                UserAddress,
+                Password);
         }
 
         private MimeMessage CreateMailMessage()
@@ -47,7 +56,7 @@ namespace MailKitClient.Forms
                     attachment.ContentType.Parameters.Clear();
                     attachment.ContentDisposition.Parameters.Clear();
                     attachment.ContentType.Parameters.Add(charset, "name", path);
-                    attachment.ContentDisposition.Parameters.Add(charset, "filename", path);
+                    attachment.ContentDisposition.Parameters.Add(charset, "filename", Path.GetFileName(path));
 
                     // 解决文件名不能超过41字符
                     foreach (var param in attachment.ContentDisposition.Parameters)
@@ -66,10 +75,6 @@ namespace MailKitClient.Forms
             message.Date = DateTime.Now;
 
             return message;
-        }
-
-        private void MailClientForm_Shown(object sender, System.EventArgs e)
-        {
         }
 
         private void AttachmentButton_Click(object sender, System.EventArgs e)
@@ -95,6 +100,8 @@ namespace MailKitClient.Forms
 
         private void SendButton_Click(object sender, EventArgs e)
         {
+            this.SendButton.Enabled = false;
+
             bool retry;
             do
             {
@@ -102,7 +109,9 @@ namespace MailKitClient.Forms
                 {
                     var message = this.CreateMailMessage();
                     this.mailKitSender.Send(message);
+
                     retry = false;
+                    MessageBox.Show($"邮件成功发送到 {message.To.Count} 个联系人：\n{string.Join("\n", message.To.Cast<MailboxAddress>().Select((to, index) => $"\t{index}：{to.Address}"))}");
                 }
                 catch (Exception ex)
                 {
@@ -110,6 +119,8 @@ namespace MailKitClient.Forms
                 }
             }
             while (retry);
+
+            this.SendButton.Enabled = true;
         }
     }
 }
