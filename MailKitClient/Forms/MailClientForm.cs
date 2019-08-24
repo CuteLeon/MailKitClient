@@ -50,23 +50,9 @@ namespace MailKitClient.Forms
                 {
                     var bytes = File.ReadAllBytes(path);
                     var attachment = bodyBuilder.Attachments.Add(path, bytes);
-
-                    // 解决中文文件名乱码
-                    var charset = "GB18030";
-                    attachment.ContentType.Parameters.Clear();
-                    attachment.ContentDisposition.Parameters.Clear();
-                    attachment.ContentType.Parameters.Add(charset, "name", path);
-                    attachment.ContentDisposition.Parameters.Add(charset, "filename", Path.GetFileName(path));
-
-                    // 解决文件名不能超过41字符
-                    foreach (var param in attachment.ContentDisposition.Parameters)
-                        param.EncodingMethod = ParameterEncodingMethod.Rfc2047;
-                    foreach (var param in attachment.ContentType.Parameters)
-                        param.EncodingMethod = ParameterEncodingMethod.Rfc2047;
                 }
             }
             var body = bodyBuilder.ToMessageBody();
-            //var body = new TextPart(TextFormat.Html) { Text = this.BodyTextBox.Text };
 
             message.From.Add(sender);
             message.To.AddRange(receivers);
