@@ -10,14 +10,16 @@ namespace MailKitClient.Forms
     public partial class MailClientForm : Form
     {
         private const string SmtpClientHost = "smtp.yeah.net";
+        private const string ImapClientHost = "imap.yeah.net";
         private const int SmtpClientPort = 25;
+        private const int ImapClientPort = 143;
         private const string UserName = "SystemRC";
         private const string UserAddress = "SystemRC@yeah.net";
         private const string Password = "SystemRC123";
 
         MailKitSender mailKitSender;
 
-        MailKitReceiver mailKitReceiver = new MailKitReceiver();
+        MailKitReceiver mailKitReceiver;
 
         public MailClientForm()
         {
@@ -29,6 +31,12 @@ namespace MailKitClient.Forms
             this.mailKitSender = new MailKitSender(
                 SmtpClientHost,
                 SmtpClientPort,
+                UserAddress,
+                Password);
+
+            this.mailKitReceiver = new MailKitReceiver(
+                ImapClientHost,
+                ImapClientPort,
                 UserAddress,
                 Password);
         }
